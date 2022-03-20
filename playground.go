@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"strings"
 	"syscall/js"
 
 	"github.com/hashicorp/hcl/v2/hclparse"
+	"github.com/hashicorp/hcl/v2/hclwrite"
 )
 
 func main() {
@@ -18,10 +18,6 @@ func main() {
 	errorsOutput := document.Call("getElementById", "errors")
 	validateButton := document.Call("getElementById", "validate")
 
-	fmt.Println(codeInput.Get("value"))
-	fmt.Println(formattedOutput.Get("value"))
-	formattedOutput.Set("value", "hallo")
-
 	buttonClicks := make(chan struct{})
 	validateButton.Call("addEventListener", "click", js.FuncOf(func(this js.Value, args []js.Value) any {
 		log.Println("button clicked")
@@ -30,11 +26,13 @@ func main() {
 	}))
 
 	for range buttonClicks {
-		log.Println("received button clicked msg")
+		log.Println("validating")
 
 		hclInput := []byte(codeInput.Get("value").String())
 		p := hclparse.NewParser()
 		_, diags := p.ParseHCL(hclInput, "playground")
+
+		log.Println("parsed code, checking errors")
 
 		errMsgs := make([]string, len(diags))
 
@@ -43,5 +41,14 @@ func main() {
 		}
 
 		errorsOutput.Set("value", strings.Join(errMsgs, "\n"))
+
+		if diags.HasErrors() {
+			continue
+		}
+
+		log.Println("no errors found, formatting code")
+
+		formattedCode := hclwrite.Format(hclInput)
+		formattedOutput.Set("value", string(formattedCode))
 	}
 }
