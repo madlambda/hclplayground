@@ -8,6 +8,20 @@
 				go.run(result.instance);
 			});
 		</script>
+                <style>
+                .button {
+                  border: none;
+                  color: white;
+                  padding: 15px 32px;
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  font-size: 16px;
+                  margin: 4px 2px;
+                  cursor: pointer;
+                }
+                .validate {background-color: #008CBA;} /* Blue */
+                </style>
 	</head>
 	<body>
             <textarea id="code" name="code" autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Try HCL" wrap="off" style="width: 700px; height: 900px">
@@ -17,7 +31,14 @@
 string = "hi"
 bool   = true
 list   = []
-obj    = {}
-            </textarea>
+obj    = {}</textarea>
+            <textarea id="formatted" name="formmated" autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Formatted" wrap="off" style="width: 700px; height: 900px">
+// On validation formatted code will be shown here</textarea>
+            <br>
+            <button class="button validate">Validate</button>
+            <br>
+            <textarea id="errors" name="errors" autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Formatted" wrap="off" style="width: 1400px; height: 200px">
+            On validation, errors if any will be shown here</textarea>
+            <br>
 	</body>
 </html>
